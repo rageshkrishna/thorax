@@ -180,6 +180,9 @@ function bindEventHandler(eventName, params) {
     try {
       method.apply(context, arguments);
     } catch (e) {
+      if ($server) {
+        throw e;
+      }
       Thorax.onException('thorax-exception: ' + (context.name || context.cid) + ':' + eventName, e);
     }
   }
