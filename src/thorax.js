@@ -1,4 +1,4 @@
-/*global cloneInheritVars, createInheritVars, resetInheritVars, createRegistryWrapper, getValue, inheritVars, createErrorMessage */
+/*global $server, assignTemplate, createErrorMessage, createInheritVars, createRegistryWrapper, getValue, inheritVars, resetInheritVars */
 
 // Provide default behavior for client-failover
 if (typeof $server === 'undefined') {
@@ -88,7 +88,7 @@ Thorax.View = Backbone.View.extend({
     delegate = delegate && !$server;
 
     var response = Backbone.View.prototype.setElement.call(this, element, delegate);
-    this.el = this.$el.eq(0);   // Override backbone for proper server support
+    this.el = $server ? this.$el.eq(0) : this.$el[0];   // Override backbone for proper server support
 
     this.name && this.$el.attr(viewNameAttributeName, this.name);
     this.$el.attr(viewCidAttributeName, this.cid);
