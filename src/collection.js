@@ -139,19 +139,21 @@ Thorax.CollectionView = Thorax.View.extend({
       }
       var itemElement = itemView.$el || $($.trim(itemView)).filter(function() {
         //filter out top level whitespace nodes
-        return this.nodeType === ELEMENT_NODE_TYPE;
+        // TODO : Revaluate the cheerio implementation for type vs. nodeType
+        return node.nodeType === ELEMENT_NODE_TYPE || node.type === 'tag';
       });
 
+      var $itemElement = $(itemElement),
+          previousModel = index > 0 ? this.collection.at(index - 1) : false;
       if (model) {
-        itemElement.attr(modelCidAttributeName, model.cid);
+        $itemElement.attr(modelCidAttributeName, model.cid);
       }
-      var previousModel = index > 0 ? this.collection.at(index - 1) : false;
       if (!previousModel) {
-        $el.prepend(itemElement);
+        $el.prepend($itemElement);
       } else {
         //use last() as appendItem can accept multiple nodes from a template
         var last = $el.children('[' + modelCidAttributeName + '="' + previousModel.cid + '"]').last();
-        last.after(itemElement);
+        last.after($itemElement);
       }
 
       this.trigger('append', null, function(el) {
